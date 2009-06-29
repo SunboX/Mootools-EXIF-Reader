@@ -9,6 +9,7 @@ Feel free to post your Feature requests.
 It requires Mootools and is tested with v1.2.3.
 
 Required Mootools More Plugins:
+
 * Lang
 
 Demo
