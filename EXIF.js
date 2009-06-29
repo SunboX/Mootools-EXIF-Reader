@@ -13,7 +13,7 @@
  Credits:
  	Based on Javascript EXIF Reader 0.1.2, Copyright (c) 2008 Jacob Seidelin, cupboy@gmail.com, http://blog.nihilogic.dk/
  */
-EXIF = new Class({
+var EXIF = new Class({
 
     Implements: [Events, Options],
     
@@ -26,7 +26,7 @@ EXIF = new Class({
     
     parseByteStream: function(byteStream){
         if (byteStream.getByteAt(0) != 0xFF || byteStream.getByteAt(1) != 0xD8) {
-            this.fireEvent('complete');
+            this.fireEvent('complete', this.tags);
             return this; // not a valid jpeg
         }
         
@@ -35,7 +35,7 @@ EXIF = new Class({
         while (offset < length) {
             if (byteStream.getByteAt(offset) != 0xFF) {
                 this.log('Not a valid marker at offset ' + offset + ', found: ' + byteStream.getByteAt(offset));
-                this.fireEvent('complete');
+                this.fireEvent('complete', this.tags);
                 return this; // not a valid marker, something is wrong
             }
             
@@ -64,6 +64,7 @@ EXIF = new Class({
     readEXIFData: function(byteStream, start, length){
         if (byteStream.getStringAt(start, 4) != 'Exif') {
             this.log('Not valid EXIF data! ' + byteStream.getStringAt(start, 4));
+			this.fireEvent('complete', this.tags);
             return this;
         }
         
@@ -81,19 +82,19 @@ EXIF = new Class({
             }
             else {
                 this.log('Not valid TIFF data! (no 0x4949 or 0x4D4D)');
-                this.fireEvent('complete');
+                this.fireEvent('complete', this.tags);
                 return this;
             }
         
         if (byteStream.getShortAt(TIFFOffset + 2, bigEnd) != 0x002A) {
             this.log('Not valid TIFF data! (no 0x002A)');
-            this.fireEvent('complete');
+            this.fireEvent('complete', this.tags);
             return this;
         }
         
         if (byteStream.getLongAt(TIFFOffset + 4, bigEnd) != 0x00000008) {
             this.log('Not valid TIFF data! (First offset not 8)', byteStream.getShortAt(TIFFOffset + 4, bigEnd));
-            this.fireEvent('complete');
+            this.fireEvent('complete', this.tags);
             return this;
         }
         
@@ -157,7 +158,7 @@ EXIF = new Class({
         
         this.tags.extend(tags);
         
-        this.fireEvent('complete');
+        this.fireEvent('complete', this.tags);
         return this;
     },
     
@@ -264,16 +265,21 @@ EXIF = new Class({
                 break;
         }
     },
+	
+	getTags: function()
+	{
+		return this.tags;
+	},
     
     pretty: function(){
         var pretty = '';
         for (var a in this.tags) {
             if (this.tags.hasOwnProperty(a)) {
                 if (typeof this.tags[a] == 'object') {
-                    pretty += a + ' : [' + this.tags[a].length + ' values]\r\n';
+                    pretty += a + ' : [' + this.tags[a].length + " values]\r\n";
                 }
                 else {
-                    pretty += a + ' : ' + this.tags[a] + '\r\n';
+                    pretty += a + ' : ' + this.tags[a] + "\r\n";
                 }
             }
         }
