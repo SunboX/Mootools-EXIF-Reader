@@ -41,8 +41,7 @@ Request.Binary = new Class({
                     this.failure();
                     this.xhr.onload = $empty;
                 }
-            }
-.bind(this);
+            }.bind(this);
         }
         else {
             this.xhr.onreadystatechange = function(){
@@ -56,8 +55,7 @@ Request.Binary = new Class({
                         this.xhr.onreadystatechange = $empty;
                     }
                 }
-            }
-.bind(this);
+            }.bind(this);
         }
         this.xhr.open('HEAD', this.options.url, true);
         this.xhr.send(null);
@@ -131,8 +129,7 @@ Request.Binary = new Class({
                     this.failure();
                     this.xhr.onload = $empty;
                 }
-            }
-.bind(this);
+            }.bind(this);
         }
         else {
             this.xhr.onreadystatechange = function(){
@@ -150,8 +147,7 @@ Request.Binary = new Class({
                         this.xhr.onreadystatechange = $empty;
                     }
                 }
-            }
-.bind(this);
+            }.bind(this);
         }
         
         this.xhr.open(method.toUpperCase(), url, this.options.async);

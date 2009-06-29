@@ -64,7 +64,7 @@ var EXIF = new Class({
     readEXIFData: function(byteStream, start, length){
         if (byteStream.getStringAt(start, 4) != 'Exif') {
             this.log('Not valid EXIF data! ' + byteStream.getStringAt(start, 4));
-			this.fireEvent('complete', this.tags);
+            this.fireEvent('complete', this.tags);
             return this;
         }
         
@@ -265,11 +265,10 @@ var EXIF = new Class({
                 break;
         }
     },
-	
-	getTags: function()
-	{
-		return this.tags;
-	},
+    
+    getTags: function(){
+        return this.tags;
+    },
     
     pretty: function(){
         var pretty = '';
